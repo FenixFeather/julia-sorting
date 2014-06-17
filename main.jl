@@ -19,7 +19,7 @@ function test(range, f)
         ## start = time()
         tic()
         f(bla)
-        times[current] = toq()
+        times[current] = toc()
         current += 1
     end
 
