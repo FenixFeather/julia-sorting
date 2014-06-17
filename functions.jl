@@ -1,4 +1,4 @@
-#!/bin/env julia
+#!/usr/bin/env julia
 
 function mergesort(stuff::Array)
     if !isempty(stuff)

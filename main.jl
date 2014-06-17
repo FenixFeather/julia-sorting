@@ -1,14 +1,47 @@
-#/bin/env julia
+#/usr/bin/env julia
 
 using Debug
 using Winston
+using ArgParse
 
 include("functions.jl")
 
 type sortData
-    curveColor::String
+    curveColor::Union(String, Integer)
     curveLabel::String
     curveY::Array
+end
+
+function parsecmd()
+    settings = ArgParseSettings()
+    settings.prog = "Julia Sorting Test"
+    settings.description = "This is just for experimenting around with Julia features"
+    
+    @add_arg_table settings begin
+        "--range", "-r"
+        help = "The range of array size as a Range."
+        nargs = 3
+        arg_type = Int
+        ## defaultArray = Array(Integer, 1)
+        ## defaultArray = [100, 100, 1000]
+        default = [100, 100, 1000]
+
+        "--sorts", "-s"
+        help = "The sorting algorithms to test. Options are 'merge', 'insert'."
+        nargs = '*'
+        default = {"merge"}
+
+        "-o"
+        help = "Name of the file path to export to."
+        arg_type = String
+        default = "o.svg"
+
+    end
+    return parse_args(settings)
+end
+
+function randomColor()
+    return rand(Uint32) & 0x00ffffff
 end
 
 function test(range, f)
@@ -16,7 +49,6 @@ function test(range, f)
     current = 1
     for i in range
         bla = rand(Int, i)
-        ## start = time()
         tic()
         f(bla)
         times[current] = toc()
@@ -42,21 +74,30 @@ function plotStuff(x, ydata...)
 end
 
 function main()
+    settings = parsecmd()
+    println(settings)
 
-    range = 1000:1000:100000
-    ## range = 1:52
+    rangeTuple = get(settings, "range", (100,100,1000))
+    sortsToTry = get(settings, "sorts", {"merge"})
+    
+    range = rangeTuple[1]:rangeTuple[2]:rangeTuple[3]
+    
+    sortDict = ["merge"=>mergesort, "insert"=>insertionsort]
+
     
     x = [range]
-    
-    ymerge = test(range, mergesort)
-    yinsert = test(range, insertionsort)
+    curvesToPlot = Array(sortData, length(sortsToTry))
 
-    mergeCurve = sortData("red", "mergesort", ymerge)
-    insertCurve = sortData("blue", "insertionSort", yinsert)
+    for ii in length(curvesToPlot)
+        ymerge = test(range, mergesort)
+        yinsert = test(range, insertionsort)
+        curvesToPlot[ii] = sortData(randomColor(), sortsToTry[0] * "sort", test(range, get(sortDict, sortsToTry[0], "merge")))
+    end
     
     myPlot = plotStuff(x, mergeCurve, insertCurve)
     display(myPlot)
-    savefig(myPlot, "mergesort-insertionsort.png")
+    savefig(myPlot, get(settings, "o", "o.svg"))
+    
 end
 
 main()
