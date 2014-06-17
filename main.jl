@@ -27,7 +27,7 @@ function test(range, f)
 end
 
 function plotStuff(x, ydata...)
-    result = FramedPlot(title="Sorting comparison", xlabel="Number of Elements", ylabel="Time")
+    result = FramedPlot(title="Sorting comparison", xlabel="Number of Elements", ylabel="Time (s)")
     curves = Array(Curve, length(ydata))
     for i in 1:length(curves)
         curves[i] = Curve(x, ydata[i].curveY, color=ydata[i].curveColor, label=ydata[i].curveLabel)
@@ -43,16 +43,20 @@ end
 
 function main()
 
-    range = 100000:50000:1000000
+    range = 1000:1000:100000
+    ## range = 1:52
     
     x = [range]
     
     ymerge = test(range, mergesort)
+    yinsert = test(range, insertionsort)
 
-    mergeCurve = sortData("black", "mergesort", ymerge)
+    mergeCurve = sortData("red", "mergesort", ymerge)
+    insertCurve = sortData("blue", "insertionSort", yinsert)
     
-    myPlot = plotStuff(x, mergeCurve)
+    myPlot = plotStuff(x, mergeCurve, insertCurve)
     display(myPlot)
+    savefig(myPlot, "mergesort-insertionsort.png")
 end
 
 main()
