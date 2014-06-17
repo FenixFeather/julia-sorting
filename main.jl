@@ -84,17 +84,19 @@ function main()
     
     sortDict = ["merge"=>mergesort, "insert"=>insertionsort]
 
-    
     x = [range]
+
+    println(length(sortsToTry))
+    
     curvesToPlot = Array(sortData, length(sortsToTry))
 
-    for ii in length(curvesToPlot)
+    for ii in 1:length(curvesToPlot)
         ymerge = test(range, mergesort)
         yinsert = test(range, insertionsort)
-        curvesToPlot[ii] = sortData(randomColor(), sortsToTry[0] * "sort", test(range, get(sortDict, sortsToTry[0], "merge")))
+        curvesToPlot[ii] = sortData(randomColor(), sortsToTry[ii] * "sort", test(range, get(sortDict, sortsToTry[ii], "merge")))
     end
     
-    myPlot = plotStuff(x, mergeCurve, insertCurve)
+    myPlot = plotStuff(x, curvesToPlot...)
     display(myPlot)
     savefig(myPlot, get(settings, "o", "o.svg"))
     
