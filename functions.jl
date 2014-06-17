@@ -34,4 +34,20 @@ function mergesort(stuff::Array)
     end
 end
 
+function insertionsort(stuff::Array)
+    if !isempty(stuff)
+        for i in 2:length(stuff)
+            current = stuff[i]
+            checkIndex = i
+
+            while checkIndex > 1 && stuff[checkIndex - 1] > current
+                stuff[checkIndex] = stuff[checkIndex - 1]
+                checkIndex -= 1
+            end
+
+            stuff[checkIndex] = current
+        end
+        return stuff
+    end
+end
 
