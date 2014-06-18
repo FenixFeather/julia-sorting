@@ -77,12 +77,12 @@ function main()
     settings = parsecmd()
     println(settings)
 
-    rangeTuple = get(settings, "range", (100,100,1000))
-    sortsToTry = get(settings, "sorts", {"merge"})
+    rangeTuple = settings["range"]
+    sortsToTry = settings["sorts"]
     
     range = rangeTuple[1]:rangeTuple[2]:rangeTuple[3]
     
-    sortDict = ["merge"=>mergesort, "insert"=>insertionsort]
+    sortDict = ["merge"=>mergesort, "insert"=>insertionsort, "bubble"=>bubblesort]
 
     x = [range]
 
@@ -91,14 +91,12 @@ function main()
     curvesToPlot = Array(sortData, length(sortsToTry))
 
     for ii in 1:length(curvesToPlot)
-        ymerge = test(range, mergesort)
-        yinsert = test(range, insertionsort)
         curvesToPlot[ii] = sortData(randomColor(), sortsToTry[ii] * "sort", test(range, get(sortDict, sortsToTry[ii], "merge")))
     end
     
     myPlot = plotStuff(x, curvesToPlot...)
     display(myPlot)
-    savefig(myPlot, get(settings, "o", "o.svg"))
+    savefig(myPlot, settings["o"])
     
 end
 
