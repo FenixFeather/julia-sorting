@@ -82,7 +82,7 @@ function main()
     
     range = rangeTuple[1]:rangeTuple[2]:rangeTuple[3]
     
-    sortDict = ["merge"=>mergesort, "insert"=>insertionsort, "bubble"=>bubblesort]
+    sortDict = ["merge"=>mergesort, "insert"=>insertionsort, "bubble"=>bubblesort, "quick"=>quicksort]
 
     x = [range]
 

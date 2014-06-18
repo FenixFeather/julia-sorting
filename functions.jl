@@ -51,3 +51,53 @@ function insertionsort(stuff::Array)
     end
 end
 
+function bubblesort(stuff::Array)
+    if !isempty(stuff)
+        swapped = true
+        while swapped
+            swapped = false
+            for ii = 2:length(stuff)
+                if stuff[ii - 1] > stuff[ii]
+                    stuff[ii - 1], stuff[ii] = stuff[ii], stuff[ii - 1]
+                    swapped = true
+                end
+            end
+        end
+        return stuff
+    end
+end
+
+function quicksort(stuff::Array)
+    if !isempty(stuff)
+        function quicksortStuff(newStuff, left, right)
+            if left < right
+                pivotPosition = partition(newStuff, left, right)
+                quicksortStuff(newStuff, left, pivotPosition - 1)
+                quicksortStuff(newStuff, pivotPosition + 1, right)
+                return newStuff
+            end
+        end
+
+        function partition(newStuff, left, right)
+            pivotIndex = pickpivot(newStuff, left, right)
+            pivotValue = newStuff[pivotIndex]
+            newStuff[pivotIndex], newStuff[right] = newStuff[right], newStuff[pivotIndex]
+            current = left
+            for ii in left:right - 1
+                if newStuff[ii] <= pivotValue
+                    newStuff[ii], newStuff[current] = newStuff[current], newStuff[ii]
+                    current += 1
+                end
+            end
+            newStuff[current], newStuff[right] = newStuff[right], newStuff[current]
+            return current
+        end
+
+        function pickpivot(newStuff, left, right)
+            ## return median([newStuff[left], newStuff[right], newStuff[left + floor((right - left)/2)]])
+            return left + floor((right - left)/2)
+        end
+
+        return quicksortStuff(stuff, 1, length(stuff))
+    end
+end
